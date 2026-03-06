@@ -1,0 +1,98 @@
+---
+---
+<!-- VISOR DE GALERÍA -->
+<div id="lightbox" class="gallery-modal" role="dialog" aria-modal="true">
+    <button class="gallery-btn gallery-close" id="btn-close-gallery" aria-label="Tancar galeria"><i class="fas fa-times"></i></button>
+    <button class="gallery-btn gallery-nav gallery-prev" id="btn-prev-img" aria-label="Imatge anterior"><i class="fas fa-chevron-left"></i></button>
+    
+    <img id="lightbox-img" src="" alt="Imagen ampliada del proyecto">
+    
+    <button class="gallery-btn gallery-nav gallery-next" id="btn-next-img" aria-label="Imatge següent"><i class="fas fa-chevron-right"></i></button>
+</div>
+
+<style>
+    /* VISOR GALERÍA (Optimizado para botones) */
+    .gallery-modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.95); align-items: center; justify-content: center; opacity: 0; transition: opacity var(--transition-speed) ease; }
+    .gallery-modal.show { display: flex; opacity: 1; }
+    .gallery-modal img { max-width: 90%; max-height: 85vh; object-fit: contain; box-shadow: 0 0 20px rgba(0,0,0,0.5); border-radius: 4px; }
+    
+    /* Botones galería adaptados para accesibilidad */
+    .gallery-btn { background: none; border: none; color: var(--text-white); cursor: pointer; transition: color var(--transition-speed) ease; }
+    .gallery-btn:hover { color: var(--primary-color); }
+    
+    .gallery-close { position: absolute; top: 30px; right: 40px; font-size: 35px; }
+    .gallery-nav { position: absolute; top: 50%; transform: translateY(-50%); font-size: 40px; padding: 20px; user-select: none; }
+    .gallery-prev { left: 20px; }
+    .gallery-next { right: 20px; }
+</style>
+
+<script is:inline>
+    // --- LÓGICA DE LA GALERÍA MEJORADA ---
+    const projectImages = {
+        'palamos': ['/images/galeria_palamos_1.jpg', '/images/galeria_palamos_2.jpg', '/images/galeria_palamos_3.jpg'],
+        'sils': ['/images/galeria_sils_1.jpg', '/images/galeria_sils_2.jpg', '/images/galeria_sils_3.jpg', '/images/galeria_sils_4.jpg', '/images/galeria_sils_5.jpg'],
+        'mataro': ['/images/galeria_mataro_1.jpg', '/images/galeria_mataro_2.jpg', '/images/galeria_mataro_3.jpg', '/images/galeria_mataro_4.jpg', '/images/galeria_mataro_5.jpg'],
+        'sabadell': ['/images/galeria_sabadell_1.jpg', '/images/galeria_sabadell_2.jpg', '/images/galeria_sabadell_3.jpg', '/images/galeria_sabadell_4.jpg'],
+        'premia1': ['/images/galeria_premia1_1.jpg', '/images/galeria_premia1_2.jpg', '/images/galeria_premia1_3.png', '/images/galeria_premia1_4.jpg'],
+        'arenys': ['/images/galeria_arenys_1.png', '/images/galeria_arenys_2.jpg', '/images/galeria_arenys_3.png', '/images/galeria_arenys_4.png', '/images/galeria_arenys_5.png'],
+        'premia2': ['/images/galeria_premia2_1.jpg', '/images/galeria_premia2_2.jpg', '/images/galeria_premia2_3.jpg', '/images/galeria_premia2_4.jpg', '/images/galeria_premia2_5.jpg'],
+        'lamolina': ['/images/galeria_lamolina_1.jpg', '/images/galeria_lamolina_2.jpg']
+    };
+
+    let currentArray = [];
+    let currentIndex = 0;
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+
+    // Asignar eventos dinámicamente usando data-attributes
+    document.querySelectorAll('.project-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const projectId = card.getAttribute('data-project');
+            openGallery(projectId);
+        });
+    });
+
+    function openGallery(projectId) {
+        if(!projectImages[projectId]) return;
+        currentArray = projectImages[projectId];
+        currentIndex = 0;
+        updateLightboxImage();
+        lightbox.classList.add('show');
+        document.body.style.overflow = "hidden";
+    }
+
+    function closeGallery() {
+        lightbox.classList.remove('show');
+        document.body.style.overflow = "auto";
+    }
+
+    function changeImage(step) {
+        currentIndex += step;
+        if (currentIndex >= currentArray.length) currentIndex = 0;
+        if (currentIndex < 0) currentIndex = currentArray.length - 1;
+        updateLightboxImage();
+    }
+
+    function updateLightboxImage() {
+        lightboxImg.src = currentArray[currentIndex];
+    }
+
+    // Eventos de botones
+    document.getElementById('btn-close-gallery').addEventListener('click', closeGallery);
+    document.getElementById('btn-prev-img').addEventListener('click', (e) => { e.stopPropagation(); changeImage(-1); });
+    document.getElementById('btn-next-img').addEventListener('click', (e) => { e.stopPropagation(); changeImage(1); });
+
+    // Cerrar al hacer click fuera de la imagen
+    lightbox.addEventListener('click', function(e) {
+        if(e.target === this) closeGallery();
+    });
+
+    // Eventos de teclado para mejorar UX
+    document.addEventListener('keydown', (e) => {
+        if (lightbox.classList.contains('show')) {
+            if (e.key === 'Escape') closeGallery();
+            if (e.key === 'ArrowRight') changeImage(1);
+            if (e.key === 'ArrowLeft') changeImage(-1);
+        }
+    });
+</script>

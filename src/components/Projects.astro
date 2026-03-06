@@ -1,0 +1,103 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+<section class="projects-section" id="proyectos">
+    <div class="projects-header animate fade-in-up">
+        <h5>{t('proj.sub')}</h5>
+        <h2>{t('proj.title')}</h2>
+        <p>Mostra de diferents projectes elaborats</p>
+    </div>
+    
+    <div class="projects-grid">
+        <div class="project-card animate fade-in-up" style="transition-delay: 0s;" data-project="palamos">
+            <img src="/images/cuina_palamos.jpg" alt="Cuina Palamós" loading="lazy">
+            <div class="project-overlay">
+                <h4>CUINA PALAMÓS</h4>
+                <p>Blanc Lacat amb Boreal Umber</p>
+            </div>
+        </div>
+        <div class="project-card animate fade-in-up" style="transition-delay: 0.1s;" data-project="sils">
+            <img src="/images/cuina_sils.jpg" alt="Cuina SILS" loading="lazy">
+            <div class="project-overlay">
+                <h4>CUINA SILS</h4>
+                <p>Antracita y Belvedere Black</p>
+            </div>
+        </div>
+        <div class="project-card animate fade-in-up" style="transition-delay: 0.2s;" data-project="mataro">
+            <img src="/images/cuina_mataro.jpg" alt="Cuina Mataró" loading="lazy">
+            <div class="project-overlay">
+                <h4>CUINA MATARÓ</h4>
+                <p>Gris Argil amb Grassi white Ascale</p>
+            </div>
+        </div>
+        <div class="project-card animate fade-in-up" style="transition-delay: 0.3s;" data-project="sabadell">
+            <img src="/images/cuina_sabadell.jpg" alt="Cuina Sabadell" loading="lazy">
+            <div class="project-overlay">
+                <h4>CUINA SABADELL</h4>
+                <p>Lacat Mate amb Roure i Lassa white Ascale</p>
+            </div>
+        </div>
+        
+        <div class="project-card animate fade-in-up" style="transition-delay: 0.3s;" data-project="premia1">
+            <img src="/images/cuina_premia1.jpg" alt="Cuina Premià" loading="lazy">
+            <div class="project-overlay">
+                <h4>CUINA PREMIÀ</h4>
+                <p>Caixmir amb Roure i Lassa White Ascale</p>
+            </div>
+        </div>
+        <div class="project-card animate fade-in-up" style="transition-delay: 0.2s;" data-project="arenys">
+            <img src="/images/cuina_arenys.png" alt="Cuina Arenys" loading="lazy">
+            <div class="project-overlay">
+                <h4>CUINA ARENYS</h4>
+                <p>Gris Clar amb Grassi White Ascale</p>
+            </div>
+        </div>
+        <div class="project-card animate fade-in-up" style="transition-delay: 0.1s;" data-project="premia2">
+            <img src="/images/cuina_premia2.jpg" alt="Cuina Premià 2" loading="lazy">
+            <div class="project-overlay">
+                <h4>CUINA PREMIÀ</h4>
+                <p>Blanc Mat amb Antracita</p>
+            </div>
+        </div>
+        <div class="project-card animate fade-in-up" style="transition-delay: 0s;" data-project="lamolina">
+            <img src="/images/cuina_lamolina.jpg" alt="Cuina La Molina" loading="lazy">
+            <div class="project-overlay">
+                <h4>CUINA LA MOLINA</h4>
+                <p>Gris Argil amb Croma White</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* ---------------------------------------------------- */
+    /* PROJECTES */
+    /* ---------------------------------------------------- */
+    .projects-section { max-width: 1300px; margin: 100px auto; padding: 0 20px; }
+    .projects-header { text-align: center; margin-bottom: 50px; }
+    .projects-header h5 { color: var(--primary-color); font-family: var(--font-headings); font-size: 18px; letter-spacing: 0.1em; text-transform: uppercase; margin: 0 0 10px 0; font-weight: 600; }
+    .projects-header h2 { font-family: var(--font-headings); font-size: 42px; color: var(--text-dark); margin: 0 0 15px 0; text-transform: uppercase; font-weight: 600; letter-spacing: 0.01em; }
+    .projects-header p { color: var(--text-light); font-size: 16px; margin: 0; font-weight: 300; }
+    
+    .projects-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; }
+    .project-card { position: relative; overflow: hidden; aspect-ratio: 4 / 3; cursor: pointer; background-color: var(--box-bg); }
+    .project-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
+    
+    .project-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.9); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.4s ease; padding: 20px; text-align: center; box-sizing: border-box; }
+    .project-card:hover img { transform: scale(1.05); }
+    .project-card:hover .project-overlay { opacity: 1; }
+    
+    .project-overlay h4 { font-family: var(--font-headings); font-size: 20px; color: var(--text-dark); margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
+    .project-overlay p { font-family: var(--font-main); color: var(--text-light); font-size: 15px; font-weight: 300; margin: 0; }
+
+    @media (max-width: 1024px) {
+        .projects-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+        .projects-grid { grid-template-columns: 1fr; }
+    }
+</style>

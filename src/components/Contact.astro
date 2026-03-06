@@ -1,0 +1,71 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+<section class="contact-section" id="contacto">
+    <div class="contact-grid">
+        <div class="contact-info animate fade-in-left">
+            <h2>{t('contact.title')}</h2>
+            <p>Zona Barcelona, Maresme i Costa Brava</p>
+            <div class="map-container">
+                <iframe src="https://maps.google.com/maps?q=Antoni%20Guadi%2C%206%20Canet&z=13&t=m&output=embed&iwloc=near" title="Mapa de ubicación de Mave Studio" loading="lazy"></iframe>
+            </div>
+            <ul class="contact-details">
+                <li><i class="fas fa-phone-alt"></i> (+34) 623 92 76 78, Vern</li>
+                <li><i class="fas fa-envelope"></i> info@maveinteriorstudio.com</li>
+                <li><i class="fas fa-map-marker-alt"></i> Antoni Gaudí 6, Canet de Mar, Barcelona</li>
+            </ul>
+        </div>
+
+        <div class="contact-form-box animate fade-in-right">
+            <form action="https://formsubmit.co/info@maveinteriorstudio.com" method="POST">
+                <!-- Trampa Anti-Spam (Honeypot): Los bots la llenan y el mensaje se descarta automáticamente -->
+                <input type="text" name="_honey" style="display:none">
+                
+                <!-- Configuración del correo -->
+                <input type="hidden" name="_template" value="box">
+                <input type="hidden" name="_subject" value="Nou missatge des de la web de MAVE!">
+
+                <!-- Aria-labels añadidos para mejorar accesibilidad -->
+                <input type="text" name="name" placeholder={t('contact.form.name.ph')} aria-label={t('contact.form.name')} required>
+                <input type="tel" name="phone" placeholder="Telèfon de contacte" aria-label="Telèfon de contacte">
+                <input type="email" name="email" placeholder={t('contact.form.email.ph')} aria-label={t('contact.form.email')} required>
+                <input type="text" name="Asunto" placeholder="Assumpte" aria-label="Assumpte">
+                <textarea name="message" placeholder={t('contact.form.msg.ph')} aria-label={t('contact.form.msg')} required></textarea>
+                <button type="submit" class="btn-submit">{t('contact.form.btn')}</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* ---------------------------------------------------- */
+    /* --- CONTACTO --- */
+    /* ---------------------------------------------------- */
+    .contact-section { max-width: 1300px; margin: 0 auto; min-height: 100vh; display: flex; align-items: center; padding: 80px 20px; box-sizing: border-box; }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: start; width: 100%; }
+    .contact-form-box { background-color: var(--text-white); padding: 50px 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.06); border-radius: 4px; }
+    .contact-form-box input, .contact-form-box textarea { width: 100%; padding: 15px; margin-bottom: 20px; border: 1px solid var(--box-bg); font-family: var(--font-main); font-size: 15px; font-weight: 300; color: var(--text-light); box-sizing: border-box; transition: border-color var(--transition-speed) ease; }
+    .contact-form-box input:focus, .contact-form-box textarea:focus { outline: none; border-color: var(--primary-color); }
+    .contact-form-box textarea { height: 150px; resize: vertical; }
+    .btn-submit { background-color: var(--text-dark); color: var(--text-white); border: none; padding: 15px 40px; font-family: var(--font-main); font-size: 14px; font-weight: 400; text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; transition: background var(--transition-speed) ease; }
+    .btn-submit:hover { background-color: var(--primary-color); }
+    
+    .contact-info h2 { font-family: var(--font-headings); font-size: 42px; color: var(--text-dark); margin: 0 0 10px 0; text-transform: uppercase; font-weight: 600; letter-spacing: 0.01em; }
+    .contact-info > p { font-family: var(--font-main); color: var(--text-light); font-size: 16px; font-weight: 300; margin-top: 0; margin-bottom: 30px; }
+    .map-container { width: 100%; height: 250px; margin-bottom: 30px; }
+    .map-container iframe { width: 100%; height: 100%; border: 0; filter: grayscale(100%); }
+    .contact-details { list-style: none; padding: 0; margin: 0; }
+    .contact-details li { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; font-family: var(--font-main); color: var(--text-light); font-size: 16px; font-weight: 300; }
+    .contact-details li i { color: var(--primary-color); font-size: 18px; width: 20px; text-align: center; }
+
+    @media (max-width: 1024px) {
+        .contact-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+        .contact-form-box { padding: 30px 20px; }
+    }
+</style>

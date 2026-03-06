@@ -1,0 +1,30 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+<section class="about-section" id="sobrenosotros">
+    <div class="about-text animate fade-in-left">
+        <h5 class="section-subtitle">{t('about.subtitle')}</h5>
+        <h2 class="section-title">{t('about.title')}</h2>
+        <p>{t('about.desc')}</p>
+    </div>
+    <div class="about-image animate fade-in-right">
+        <img src="/images/comedor_palamos.jpg" alt="Comedor Mave" loading="lazy">
+    </div>
+</section>
+
+<style>
+    .about-section { max-width: 1300px; margin: 100px auto; padding: 0 20px; display: flex; align-items: center; gap: 100px; }
+    .about-text { flex: 1; }
+    .about-image { flex: 1; background-color: var(--box-bg); }
+    .about-image img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: block; }
+    .section-subtitle { color: var(--primary-color); font-family: var(--font-headings); font-size: 18px; letter-spacing: 0.1em; text-transform: uppercase; margin: 0 0 10px 0; font-weight: 600; }
+    .section-title { font-family: var(--font-headings); font-size: 42px; color: var(--text-dark); margin: 0 0 20px 0; text-transform: uppercase; font-weight: 600; letter-spacing: 0.01em; }
+    .about-text p { font-family: var(--font-main); color: var(--text-light); font-size: 16px; line-height: 1.6; font-weight: 300; }
+
+    @media (max-width: 768px) {
+        .about-section { flex-direction: column; text-align: center; gap: 40px; }
+    }
+</style>

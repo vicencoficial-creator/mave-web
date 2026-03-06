@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mave Interior Studio</title>
+    
+    <!-- Preconnect para optimizar la carga de fuentes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;800&family=Lato:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- VARIABLES CSS (Para fácil mantenimiento) --- */
+        :root {
+            --bg-color: #f8f8f8;
+            --text-dark: #181818;
+            --text-light: #666666;
+            --text-white: #ffffff;
+            --primary-color: #ad9271;
+            --secondary-color: #996535;
+            --box-bg: #eaeaeb;
+            --font-main: 'Heebo', sans-serif;
+            --font-headings: 'Lato', sans-serif;
+            --transition-speed: 0.3s;
+        }
+
+        /* SCROLL SUAVE Y FRENADO DE MENÚ */
+        html { 
+            scroll-behavior: smooth; 
+            background-color: var(--bg-color); 
+            overflow-x: hidden;
+        }
+        #sobrenosotros, #servicios, #proyectos, #contacto { scroll-margin-top: 100px; }
+
+        body { 
+            margin: 0; 
+            font-family: var(--font-main); 
+            background-color: var(--bg-color); 
+            overflow-x: hidden; 
+        }
+        body.loading { overflow: hidden; }
+
+        /* --- PRELOADER (Carga de la web) --- */
+        #preloader {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
+            background-color: var(--bg-color); z-index: 99999;
+            transition: opacity 0.8s ease; 
+        }
+        #preloader.hidden { opacity: 0; visibility: hidden; }
+
+        /* ANIMACIONES AL HACER SCROLL */
+        .animate { 
+            opacity: 0; 
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out; 
+            will-change: opacity, transform;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .fade-in-up { transform: translateY(40px); }
+        .fade-in-left { transform: translateX(-50px); }
+        .fade-in-right { transform: translateX(50px); }
+        .animate.visible { 
+            opacity: 1; 
+            transform: translate(0); 
+        } 
+
+        /* ANIMACIÓN DEL MENÚ */
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* ANIMACIÓN FLUIDA DE SCROLL */
+        @keyframes scrollFluid {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        /* ---------------------------------------------------- */
+        /* --- CABECERA Y MENÚ --- */
+        /* ---------------------------------------------------- */
+        header { 
+            position: absolute; top: 0; left: 0; width: 100%; display: flex; justify-content: center; 
+            padding: 30px 0; z-index: 100; animation: slideDown 1s ease-out forwards; 
+        }
+        .mobile-top-bar { display: none; }
+        nav { display: flex; gap: 30px; align-items: center; }
+        
+        nav a.nav-link { 
+            position: relative;
+            text-decoration: none; color: var(--text-white); font-family: var(--font-headings); 
+            font-size: 13.5px; font-weight: 400; text-transform: uppercase; letter-spacing: 0.2em; 
+            transition: color var(--transition-speed) ease; text-shadow: 1px 1px 4px rgba(0,0,0,0.6); 
+            padding-bottom: 6px; 
+        }
+        nav a.nav-link:hover { color: var(--text-white); }
+        
+        nav a.nav-link::after {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+            background-color: var(--primary-color); transform: scaleX(0); transition: transform var(--transition-speed) ease;
+        }
+        nav a.nav-link:hover::after { transform: scaleX(1); }
+
+        /* DESPLEGABLE D'IDIOMES CORREGIDO */
+        .nav-idioma { position: relative; display: flex; align-items: center; }
+        .nav-idioma > a { 
+            text-decoration: none; color: var(--text-white); font-family: var(--font-headings); 
+            font-size: 13.5px; font-weight: 400; text-transform: uppercase; letter-spacing: 0.2em;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.6); 
+			padding-bottom: 6px;
+        }
+        .nav-idioma i { margin-left: 4px; font-size: 10px; transform: translateY(-1px); }
+        .nav-dropdown {
+            display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); 
+            background-color: var(--text-white); min-width: 120px; box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            padding: 10px 0; margin-top: 10px; border-radius: 2px;
+        }
+        
+        .nav-dropdown::before {
+            content: ''; position: absolute; top: -15px; left: 0; right: 0; height: 15px;
+        }
+
+        .nav-idioma:hover .nav-dropdown { display: block; }
+        .nav-dropdown a { display: block; padding: 10px 20px; color: var(--text-light); text-decoration: none; font-size: 12px; text-align: center; }
+        .nav-dropdown a::after { display: none; }
+        .nav-dropdown a:hover { background-color: var(--bg-color); color: var(--primary-color); }
+
+        /* ---------------------------------------------------- */
+        /* --- PORTADA --- */
+        /* ---------------------------------------------------- */
+        .hero { 
+            position: relative; height: calc(100vh + 115px); 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; 
+            background: radial-gradient(circle at center, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.1) 60%), 
+                        url('https://maveinteriorstudio.com/wp-content/uploads/2024/04/portada-web.png') center/cover no-repeat; 
+            background-position: center center;
+        }
+        
+        .hero img { width: 165px; margin-bottom: 20px; position: relative; z-index: 2; filter: drop-shadow(0px 4px 20px rgba(0,0,0,0.6)); }
+        
+        .hero h1 { 
+            position: relative; z-index: 2; font-family: var(--font-headings); font-size: 72px; color: var(--text-white); margin: 0; 
+            text-transform: uppercase; letter-spacing: 0.45em; margin-right: -0.45em; font-weight: 700; 
+            text-shadow: 0px 4px 25px rgba(0,0,0,0.7); 
+        }
+        
+        .hero h2 { 
+            position: relative; z-index: 2; font-family: var(--font-headings); font-size: 24px; color: var(--text-white); 
+            margin: 8px 0 35px 0; text-transform: uppercase; letter-spacing: 0.4em; margin-right: -0.4em; 
+            font-weight: 300; font-style: italic; text-shadow: 0px 4px 20px rgba(0,0,0,0.7); 
+        }
+        
+        .btn-outline { 
+            position: relative; z-index: 2; font-family: var(--font-main); text-decoration: none; color: var(--text-white); 
+            border: 1px solid var(--text-white); padding: 14px 35px; font-size: 16px; text-transform: uppercase; font-weight: 400; 
+            letter-spacing: 0.1em; transition: all var(--transition-speed) ease; box-shadow: 0px 4px 15px rgba(0,0,0,0.3); 
+        }
+        .btn-outline:hover { background-color: var(--text-white); color: var(--text-dark); }
+
+        .hero-scroll { position: absolute; bottom: 140px; left: 50%; transform: translateX(-50%); z-index: 2; height: 60px; width: 1px; background: rgba(255, 255, 255, 0.2); overflow: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; }
+        .hero-scroll.hidden { opacity: 0; visibility: hidden; }
+        .scroll-line { width: 100%; height: 100%; background: var(--text-white); animation: scrollFluid 2s cubic-bezier(0.6, 0.05, 0.4, 1) infinite; }
+
+        /* ---------------------------------------------------- */
+        /* BOCADILLOS Y SOBRE NOSOTROS */
+        /* ---------------------------------------------------- */
+        .features { max-width: 1300px; margin: 0 auto; position: relative; z-index: 20; margin-top: -80px; padding: 0 20px; }
+        .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .card { background-color: var(--text-white); padding: 50px 30px 40px 30px; text-align: center; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+        .icon-circle { position: absolute; top: -35px; left: 50%; transform: translateX(-50%); background-color: var(--secondary-color); color: var(--text-white); width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; }
+        .card h3 { font-family: var(--font-headings); color: var(--text-dark); font-size: 24px; font-weight: 600; margin-bottom: 15px; }
+        .card p { font-family: var(--font-main); color: var(--text-light); font-size: 16px; line-height: 1.6; margin: 0; font-weight: 300; }
+        
+        .about-section { max-width: 1300px; margin: 100px auto; padding: 0 20px; display: flex; align-items: center; gap: 100px; }
+        .about-text { flex: 1; }
+        .about-image { flex: 1; background-color: var(--box-bg); }
+        .about-image img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: block; }
+        .section-subtitle { color: var(--primary-color); font-family: var(--font-headings); font-size: 18px; letter-spacing: 0.1em; text-transform: uppercase; margin: 0 0 10px 0; font-weight: 600; }
+        .section-title { font-family: var(--font-headings); font-size: 42px; color: var(--text-dark); margin: 0 0 20px 0; text-transform: uppercase; font-weight: 600; letter-spacing: 0.01em; }
+        .about-text p { font-family: var(--font-main); color: var(--text-light); font-size: 16px; line-height: 1.6; font-weight: 300; }
+
+        /* ---------------------------------------------------- */
+        /* --- SERVICIOS Y FRASE NEGRA --- */
+        /* ---------------------------------------------------- */
+        .services-cta-wrapper { position: relative; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        
+        .services-bg { flex: 55; background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://maveinteriorstudio.com/wp-content/uploads/2024/03/Mave_Interior_Studio_HabitacionDisenada.jpeg') center 59% / cover; }
+        
+        .cta-bg { flex: 45; background-color: #1a1a1a; }
+
+        .services-cta-content { position: absolute; top: 42%; left: 50%; transform: translate(-50%, -50%); width: 100%; max-width: 1300px; padding: 0 20px; box-sizing: border-box; z-index: 10; }
+        .services-header { text-align: center; margin-bottom: 40px; width: 100%; }
+        
+        .services-header h2.small { font-family: var(--font-headings); color: var(--primary-color); font-size: 32px; margin: 0; font-weight: 600; letter-spacing: 0.01em; transform: translateX(-40px); }
+        .services-header h2.large { font-family: var(--font-headings); color: var(--primary-color); font-size: 42px; margin: 0; font-weight: 600; letter-spacing: 0.01em; transform: translateX(40px); }
+        
+        .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .service-card { background: var(--text-white); box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+        .service-img { width: 100%; height: 260px; object-fit: cover; display: block; background-color: var(--box-bg); }
+        .service-content { padding: 40px 20px; text-align: center; }
+        .service-content h3 { font-family: var(--font-headings); font-size: 18px; color: var(--text-dark); margin: 0 0 15px 0; font-weight: 600; text-transform: uppercase; }
+        .service-content p { color: var(--text-light); font-size: 15px; line-height: 1.6; margin: 0; font-weight: 300; }
+        
+        .cta-container { position: absolute; bottom: 8%; left: 50%; transform: translateX(-50%); width: 100%; max-width: 1300px; display: flex; justify-content: space-between; align-items: center; z-index: 10; padding: 0 20px; box-sizing: border-box; }
+        .cta-text h2 { font-family: var(--font-headings); font-size: 32px; color: var(--text-white); margin: 0 0 10px 0; font-weight: 600; }
+        .cta-text p { color: #aaaaaa; font-size: 16px; margin: 0; font-weight: 300; }
+        
+        .quote-parallax { 
+            height: 50vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 40px; 
+            background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://maveinteriorstudio.com/wp-content/uploads/2024/03/Mave_Interior_Studio_MesaDecorada.jpeg') center / cover; 
+            background-attachment: fixed; 
+            background-position: center center;
+            -webkit-transform: translate3d(0,0,0); /* iOS Hardware acceleration fix */
+        }
+        .quote-parallax h3 { font-family: var(--font-headings); color: var(--text-white); font-size: 38px; font-weight: 600; line-height: 1.4; max-width: 1000px; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); margin: 0; }
+
+        /* ---------------------------------------------------- */
+        /* PROJECTES */
+        /* ---------------------------------------------------- */
+        .projects-section { max-width: 1300px; margin: 100px auto; padding: 0 20px; }
+        .projects-header { text-align: center; margin-bottom: 50px; }
+        .projects-header h5 { color: var(--primary-color); font-family: var(--font-headings); font-size: 18px; letter-spacing: 0.1em; text-transform: uppercase; margin: 0 0 10px 0; font-weight: 600; }
+        .projects-header h2 { font-family: var(--font-headings); font-size: 42px; color: var(--text-dark); margin: 0 0 15px 0; text-transform: uppercase; font-weight: 600; letter-spacing: 0.01em; }
+        .projects-header p { color: var(--text-light); font-size: 16px; margin: 0; font-weight: 300; }
+        
+        .projects-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; }
+        .project-card { position: relative; overflow: hidden; aspect-ratio: 4 / 3; cursor: pointer; background-color: var(--box-bg); }
+        .project-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
+        
+        .project-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.9); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.4s ease; padding: 20px; text-align: center; box-sizing: border-box; }
+        .project-card:hover img { transform: scale(1.05); }
+        .project-card:hover .project-overlay { opacity: 1; }
+        
+        .project-overlay h4 { font-family: var(--font-headings); font-size: 20px; color: var(--text-dark); margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
+        .project-overlay p { font-family: var(--font-main); color: var(--text-light); font-size: 15px; font-weight: 300; margin: 0; }
+
+        /* VISOR GALERÍA (Optimizado para botones) */
+        .gallery-modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.95); align-items: center; justify-content: center; opacity: 0; transition: opacity var(--transition-speed) ease; }
+        .gallery-modal.show { display: flex; opacity: 1; }
+        .gallery-modal img { max-width: 90%; max-height: 85vh; object-fit: contain; box-shadow: 0 0 20px rgba(0,0,0,0.5); border-radius: 4px; }
+        
+        /* Botones galería adaptados para accesibilidad */
+        .gallery-btn { background: none; border: none; color: var(--text-white); cursor: pointer; transition: color var(--transition-speed) ease; }
+        .gallery-btn:hover { color: var(--primary-color); }
+        
+        .gallery-close { position: absolute; top: 30px; right: 40px; font-size: 35px; }
+        .gallery-nav { position: absolute; top: 50%; transform: translateY(-50%); font-size: 40px; padding: 20px; user-select: none; }
+        .gallery-prev { left: 20px; }
+        .gallery-next { right: 20px; }
+
+        /* ---------------------------------------------------- */
+        /* --- CONTACTO --- */
+        /* ---------------------------------------------------- */
+        .contact-section { max-width: 1300px; margin: 0 auto; min-height: 100vh; display: flex; align-items: center; padding: 80px 20px; box-sizing: border-box; }
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: start; width: 100%; }
+        .contact-form-box { background-color: var(--text-white); padding: 50px 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.06); border-radius: 4px; }
+        .contact-form-box input, .contact-form-box textarea { width: 100%; padding: 15px; margin-bottom: 20px; border: 1px solid var(--box-bg); font-family: var(--font-main); font-size: 15px; font-weight: 300; color: var(--text-light); box-sizing: border-box; transition: border-color var(--transition-speed) ease; }
+        .contact-form-box input:focus, .contact-form-box textarea:focus { outline: none; border-color: var(--primary-color); }
+        .contact-form-box textarea { height: 150px; resize: vertical; }
+        .btn-submit { background-color: var(--text-dark); color: var(--text-white); border: none; padding: 15px 40px; font-family: var(--font-main); font-size: 14px; font-weight: 400; text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; transition: background var(--transition-speed) ease; }
+        .btn-submit:hover { background-color: var(--primary-color); }
+        
+        .contact-info h2 { font-family: var(--font-headings); font-size: 42px; color: var(--text-dark); margin: 0 0 10px 0; text-transform: uppercase; font-weight: 600; letter-spacing: 0.01em; }
+        .contact-info > p { font-family: var(--font-main); color: var(--text-light); font-size: 16px; font-weight: 300; margin-top: 0; margin-bottom: 30px; }
+        .map-container { width: 100%; height: 250px; margin-bottom: 30px; }
+        .map-container iframe { width: 100%; height: 100%; border: 0; filter: grayscale(100%); }
+        .contact-details { list-style: none; padding: 0; margin: 0; }
+        .contact-details li { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; font-family: var(--font-main); color: var(--text-light); font-size: 16px; font-weight: 300; }
+        .contact-details li i { color: var(--primary-color); font-size: 18px; width: 20px; text-align: center; }
+
+        /* FOOTER */
+        footer { background-color: var(--text-white); padding: 80px 20px 20px 20px; }
+        .footer-container { max-width: 1300px; margin: 0 auto; }
+        .footer-top { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; margin-bottom: 60px; }
+        .footer-logo-col img { width: 90px; margin-bottom: 25px; }
+        .social-icons { display: flex; gap: 15px; }
+        .social-icons a { display: flex; align-items: center; justify-content: center; width: 35px; height: 35px; background-color: var(--text-dark); color: var(--text-white); border-radius: 50%; text-decoration: none; transition: background var(--transition-speed) ease; }
+        .social-icons a:hover { background-color: var(--primary-color); }
+        .footer-links h6 { font-family: var(--font-headings); font-size: 18px; color: var(--text-dark); margin: 0 0 25px 0; font-weight: 600; text-transform: none; }
+        .footer-links ul { list-style: none; padding: 0; margin: 0; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a { font-family: var(--font-main); text-decoration: none; color: var(--text-light); font-size: 15px; font-weight: 300; transition: color var(--transition-speed) ease; }
+        .footer-links a:hover { color: var(--primary-color); }
+        .footer-bottom { border-top: 1px solid var(--box-bg); padding-top: 25px; display: flex; justify-content: space-between; align-items: center; font-family: var(--font-main); font-size: 13px; color: #888888; font-weight: 300; }
+
+        /* RESPONSIVE */
+        /* --- EFECTO PARALLAX SOLO PARA ORDENADORES (Evita el bug de Safari en móviles) --- */
+        @media (min-width: 769px) {
+            .hero, .quote-parallax {
+                background-attachment: fixed;
+                -webkit-transform: translate3d(0,0,0);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .projects-grid { grid-template-columns: repeat(2, 1fr); }
+            .contact-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            header { position: fixed; padding: 0; background: transparent; z-index: 1000; }
+            
+            .mobile-top-bar {
+                display: block; width: 100%; 
+                background-color: rgba(255, 255, 255, 0.58);
+                text-align: center; padding: 18px 0; color: var(--text-white); font-size: 24px;
+                cursor: pointer; z-index: 1001; position: relative;
+            }
+            
+            nav {
+                position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+                background-color: rgba(24, 24, 24, 0.98);
+                flex-direction: column; justify-content: center; align-items: center; gap: 30px;
+                opacity: 0; visibility: hidden; transform: translateY(-20px);
+                transition: all 0.4s ease; z-index: 1000;
+            }
+            nav.open {
+                opacity: 1; visibility: visible; transform: translateY(0);
+            }
+            
+            nav a.nav-link, .nav-idioma > a { font-size: 18px; }
+            
+            .nav-idioma { margin-top: 10px; flex-direction: column; }
+            .nav-dropdown { 
+                position: relative; top: 0; left: 0; transform: none; 
+                background: transparent; box-shadow: none; display: none; margin-top: 15px; 
+            }
+            .nav-idioma.active .nav-dropdown { display: block; }
+            .nav-dropdown a { color: #cccccc; padding: 10px; font-size: 16px; }
+
+            /* Ajustes Generales Móvil */
+            .features-grid, .services-grid, .projects-grid, .contact-grid { grid-template-columns: 1fr; }
+            .about-section { flex-direction: column; text-align: center; gap: 40px; }
+            .services-header h2.small, .services-header h2.large { transform: translateX(0); }
+            
+            /* Parallax Móvil fijo garantizado */
+            .quote-parallax { height: auto; padding: 100px 20px; }
+            .quote-parallax h3 { font-size: 28px; }
+            
+            .contact-form-box { padding: 30px 20px; }
+            .footer-top { grid-template-columns: 1fr; text-align: center; }
+            .footer-logo-col { display: flex; flex-direction: column; align-items: center; }
+            .footer-bottom { flex-direction: column; gap: 15px; text-align: center; }
+            
+            .hero img { width: 115px; margin-bottom: 10px; }
+            .hero h1 { font-size: 48px; letter-spacing: 0.3em; margin-right: -0.3em; }
+            .hero h2 { font-size: 16px; letter-spacing: 0.25em; margin-right: -0.25em; margin-bottom: 25px; }
+
+            .services-cta-wrapper { height: auto; display: block; background-color: #1a1a1a; padding-bottom: 50px; }
+            .services-bg { height: 350px; }
+            .cta-bg { display: none; }
+            .services-cta-content { position: relative; top: 0; left: 0; transform: none; margin-top: -280px; margin-bottom: 50px;}
+            .cta-container { position: relative; bottom: 0; left: 0; transform: none; flex-direction: column; text-align: center; gap: 30px; }
+        }
+    </style>
+</head>
+<body class="loading">
+
+    <!-- PRELOADER -->
+    <div id="preloader"></div>
+
+    <header id="main-header">
+        <div class="mobile-top-bar" id="mobile-menu" aria-label="Abrir menú" role="button" tabindex="0">
+            <i class="fas fa-bars"></i>
+        </div>
+        
+        <nav id="nav-menu">
+            <a href="#home" class="nav-link">Inici</a>
+            <a href="#sobrenosotros" class="nav-link">Sobre Nosaltres</a>
+            <a href="#servicios" class="nav-link">Serveis</a>
+            <a href="#proyectos" class="nav-link">Projectes</a>
+            <a href="#contacto" class="nav-link">Contacte</a>
+            
+            <div class="nav-idioma">
+                <a href="#" id="idioma-toggle">Idioma <i class="fas fa-angle-down"></i></a>
+                <div class="nav-dropdown">
+                    <a href="es.html">Español</a>
+                    <a href="en.html">English</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero" id="home">
+        <!-- Logo principal - Carga prioritaria -->
+        <img src="https://maveinteriorstudio.com/wp-content/uploads/2024/03/image-1-e1710264716550.png" alt="Logo Mave Interior Studio" class="animate fade-in-up">
+        <h1 class="animate fade-in-up">MAVE</h1>
+        <h2 class="animate fade-in-up">Interior Studio</h2>
+        <a href="#contacto" class="btn-outline animate fade-in-up">Contacta'ns</a>
+        
+        <div class="hero-scroll"><div class="scroll-line"></div></div>
+    </section>
+
+    <section class="features">
+        <div class="features-grid">
+            <div class="card animate fade-in-up">
+                <div class="icon-circle"><i class="far fa-clock"></i></div>
+                <h3>Ràpids i Eficients</h3>
+                <p>La nostra passió és transformar les teves idees en espais funcionals i bonics. Amb una execució àgil.</p>
+            </div>
+            <div class="card animate fade-in-up" style="transition-delay: 0.2s;">
+                <div class="icon-circle"><i class="far fa-lightbulb"></i></div>
+                <h3>Innovació</h3>
+                <p>Des de la planificació fins a l'execució, apliquem solucions innovadores per maximitzar l'eficiència.</p>
+            </div>
+            <div class="card animate fade-in-up" style="transition-delay: 0.4s;">
+                <div class="icon-circle"><i class="fas fa-hammer"></i></div>
+                <h3>Disseny Ideal</h3>
+                <p>El nostre enfocament creatiu i personalitzat garanteix que tots els detall estiguin meticulosament considerat.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-section" id="sobrenosotros">
+        <div class="about-text animate fade-in-left">
+            <h5 class="section-subtitle">Mave Interior Studio</h5>
+            <h2 class="section-title">Sobre Nosaltres</h2>
+            <p>Estem especialitzats en la reforma de cuines i reformes integrals a les zones de Barcelona, el Maresme i la Costa Brava. Oferim un servei complet: pressupost, plànols, disseny personalitzat, execució i entrega final. Coordinem cada etapa del projecte perquè el client no es preocupi per res. El nostre equip d’experts garanteix solucions funcionals, elegants i modernes, amb resultats impecables. Tu només gaudeixes del procés; nosaltres ens encarreguem de la resta.</p>
+        </div>
+        <div class="about-image animate fade-in-right">
+            <!-- Carga perezosa (lazy) para imágenes fuera de la pantalla inicial -->
+            <img src="https://maveinteriorstudio.com/wp-content/uploads/2024/03/Mave_Interior_Studio_ComedorPalamos-scaled-e1710176004384.jpeg" alt="Comedor Mave" loading="lazy">
+        </div>
+    </section>
+
+    <section class="services-cta-wrapper" id="servicios">
+        <div class="services-bg"></div>
+        <div class="cta-bg"></div>
+
+        <div class="services-cta-content">
+            <div class="services-header animate fade-in-up">
+                <h2 class="small" data-i18n="serv-sub">ELS NOSTRES</h2>
+                <h2 class="large" data-i18n="serv-title">SERVEIS</h2>
+            </div>
+            <div class="services-grid">
+                <div class="service-card animate fade-in-up">
+                    <img src="https://maveinteriorstudio.com/wp-content/uploads/2024/03/Mave_Interior_Studio_Plamos-scaled.jpg" alt="Disseny" class="service-img" loading="lazy">
+                    <div class="service-content">
+                        <h3>DISSENY</h3>
+                        <p>Et fem un projecte de disseny segons les teves necessitats i l’espai de què disposis per reformar.</p>
+                    </div>
+                </div>
+                <div class="service-card animate fade-in-up" style="transition-delay: 0.2s;">
+                    <img src="https://maveinteriorstudio.com/wp-content/uploads/2024/03/Mave_Interior_Studio_Obra-1-scaled.jpg" alt="Reforma Integral" class="service-img" loading="lazy">
+                    <div class="service-content">
+                        <h3>REFORMA INTEGRAL</h3>
+                        <p>Ens encarreguem del disseny, execució i seguiment de la reforma.</p>
+                    </div>
+                </div>
+                <div class="service-card animate fade-in-up" style="transition-delay: 0.4s;">
+                    <img src="https://maveinteriorstudio.com/wp-content/uploads/2024/04/001_NEL01_C22_AMB01-scaled-1-e1711990024963.jpeg" alt="Reforma de Cuina" class="service-img" loading="lazy">
+                    <div class="service-content">
+                        <h3>REFORMA DE CUINA</h3>
+                        <p>Realitzem el projecte de disseny de la cuina, el muntatge de mobiliari i el seguiment de l’obra.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-container">
+            <div class="cta-text animate fade-in-left">
+                <h2>A punt per començar el teu nou projecte amb MAVE?</h2>
+                <p>Pregunta pel teu pressupost sense cap compromís.</p>
+            </div>
+            <div class="animate fade-in-right">
+                <a href="#contacto" class="btn-outline">Contacta'ns</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="quote-parallax">
+        <h3 class="animate fade-in-up">» La teva llar, el teu estil, el teu pressupost «<br>Reformes a mida</h3>
+    </section>
+
+    <section class="projects-section" id="proyectos">
+        <div class="projects-header animate fade-in-up">
+            <h5>Alguns Dels</h5>
+            <h2>Nostres Projectes</h2>
+            <p>Mostra de diferents projectes elaborats</p>
+        </div>
+        
+        <!-- Uso de data-attributes en lugar de onclick directamente en el HTML -->
+        <div class="projects-grid">
+            <div class="project-card animate fade-in-up" style="transition-delay: 0s;" data-project="palamos">
+                <img src="https://maveinteriorstudio.com/wp-content/uploads/2025/01/2DA3B752-61ED-4702-A2EC-8019577BABD1-min-scaled.jpeg" alt="Cuina Palamós" loading="lazy">
+                <div class="project-overlay">
+                    <h4>CUINA PALAMÓS</h4>
+                    <p>Blanc Lacat amb Boreal Umber</p>
+                </div>
+            </div>
+            <div class="project-card animate fade-in-up" style="transition-delay: 0.1s;" data-project="sils">
+                <img src="https://maveinteriorstudio.com/wp-content/uploads/2025/01/01-min-scaled.jpeg" alt="Cuina SILS" loading="lazy">
+                <div class="project-overlay">
+                    <h4>CUINA SILS</h4>
+                    <p>Antracita y Belvedere Black</p>
+                </div>
+            </div>
+            <div class="project-card animate fade-in-up" style="transition-delay: 0.2s;" data-project="mataro">
+                <img src="https://maveinteriorstudio.com/wp-content/uploads/2025/01/01-Mataro-min-scaled.jpeg" alt="Cuina Mataró" loading="lazy">
+                <div class="project-overlay">
+                    <h4>CUINA MATARÓ</h4>
+                    <p>Gris Argil amb Grassi white Ascale</p>
+                </div>
+            </div>
+            <div class="project-card animate fade-in-up" style="transition-delay: 0.3s;" data-project="sabadell">
+                <img src="https://maveinteriorstudio.com/wp-content/uploads/2025/01/01-Sab-min-scaled.jpeg" alt="Cuina Sabadell" loading="lazy">
+                <div class="project-overlay">
+                    <h4>CUINA SABADELL</h4>
+                    <p>Lacat Mate amb Roure i Lassa white Ascale</p>
+                </div>
+            </div>
+            
+            <div class="project-card animate fade-in-up" style="transition-delay: 0.3s;" data-project="premia1">
+                <img src="https://maveinteriorstudio.com/wp-content/uploads/2025/01/01-Premia-min-scaled.jpeg" alt="Cuina Premià" loading="lazy">
+                <div class="project-overlay">
+                    <h4>CUINA PREMIÀ</h4>
+                    <p>Caixmir amb Roure i Lassa White Ascale</p>
+                </div>
+            </div>
+            <div class="project-card animate fade-in-up" style="transition-delay: 0.2s;" data-project="arenys">
+                <img src="https://maveinteriorstudio.com/wp-content/uploads/2025/01/001-Arenys-min.png" alt="Cuina Arenys" loading="lazy">
+                <div class="project-overlay">
+                    <h4>CUINA ARENYS</h4>
+                    <p>Gris Clar amb Grassi White Ascale</p>
+                </div>
+            </div>
+            <div class="project-card animate fade-in-up" style="transition-delay: 0.1s;" data-project="premia2">
+                <img src="https://maveinteriorstudio.com/wp-content/uploads/2025/01/01-Premia2-min-scaled.jpeg" alt="Cuina Premià 2" loading="lazy">
+                <div class="project-overlay">
+                    <h4>CUINA PREMIÀ</h4>
+                    <p>Blanc Mat amb Antracita</p>
+                </div>
+            </div>
+            <div class="project-card animate fade-in-up" style="transition-delay: 0s;" data-project="lamolina">
+                <img src="https://maveinteriorstudio.com/wp-content/uploads/2025/01/Mave_Interior_Studio_CuinaMolina-min-scaled.jpg" alt="Cuina La Molina" loading="lazy">
+                <div class="project-overlay">
+                    <h4>CUINA LA MOLINA</h4>
+                    <p>Gris Argil amb Croma White</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact-section" id="contacto">
+        <div class="contact-grid">
+            <div class="contact-info animate fade-in-left">
+                <h2>Contacte</h2>
+                <p>Zona Barcelona, Maresme i Costa Brava</p>
+                <div class="map-container">
+                    <iframe src="https://maps.google.com/maps?q=Antoni%20Guadi%2C%206%20Canet&z=13&t=m&output=embed&iwloc=near" title="Mapa de ubicación de Mave Studio" loading="lazy"></iframe>
+                </div>
+                <ul class="contact-details">
+                    <li><i class="fas fa-phone-alt"></i> (+34) 623 92 76 78, Vern</li>
+                    <li><i class="fas fa-envelope"></i> info@maveinteriorstudio.com</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Antoni Gaudí 6, Canet de Mar, Barcelona</li>
+                </ul>
+            </div>
+
+            <div class="contact-form-box animate fade-in-right">
+                <form action="#" method="POST">
+                    <!-- Aria-labels añadidos para mejorar la accesibilidad a lectores de pantalla -->
+                    <input type="text" placeholder="Nom" aria-label="Nom" required>
+                    <input type="tel" placeholder="Telèfon de contacte" aria-label="Telèfon de contacte">
+                    <input type="email" placeholder="Correu electrònic" aria-label="Correu electrònic" required>
+                    <input type="text" placeholder="Assumpte" aria-label="Assumpte">
+                    <textarea placeholder="Escriu aquí el teu missatge" aria-label="Missatge" required></textarea>
+                    <button type="submit" class="btn-submit">Enviar</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-top">
+                <div class="footer-logo-col">
+                    <img src="https://maveinteriorstudio.com/wp-content/uploads/2024/03/Logo-Mave-1.png" alt="Mave Interior Studio Logo" loading="lazy">
+                    <div class="social-icons">
+                        <a href="https://www.facebook.com/profile.php?id=61567412936513" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/maveinteriorstudio/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h6>Enllaços Ràpids</h6>
+                    <ul>
+                        <li><a href="#home">Inici</a></li>
+                        <li><a href="#sobrenosotros">Sobre Nosaltres</a></li>
+                        <li><a href="#servicios">Serveis</a></li>
+                        <li><a href="#proyectos">Projectes</a></li>
+                        <li><a href="#contacto">Contacte</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h6>Idiomas</h6>
+                    <ul>
+                        <li><a href="es.html">Español</a></li>
+                        <li><a href="en.html">English</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div>Interior Design & Architecture</div>
+                <div>Copyright © 2024. All rights reserved.</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- VISOR DE GALERÍA -->
+    <div id="lightbox" class="gallery-modal" role="dialog" aria-modal="true">
+        <!-- Uso de etiquetas button para asegurar accesibilidad correcta -->
+        <button class="gallery-btn gallery-close" id="btn-close-gallery" aria-label="Tancar galeria"><i class="fas fa-times"></i></button>
+        <button class="gallery-btn gallery-nav gallery-prev" id="btn-prev-img" aria-label="Imatge anterior"><i class="fas fa-chevron-left"></i></button>
+        
+        <img id="lightbox-img" src="" alt="Imagen ampliada del proyecto">
+        
+        <button class="gallery-btn gallery-nav gallery-next" id="btn-next-img" aria-label="Imatge següent"><i class="fas fa-chevron-right"></i></button>
+    </div>
+
+    <script>
+        // Ocultar preloader al cargar la web por completo
+        window.addEventListener('load', function() {
+            const preloader = document.getElementById('preloader');
+            if(preloader) {
+                preloader.classList.add('hidden');
+                setTimeout(() => { preloader.style.display = 'none'; }, 800);
+            }
+            document.body.classList.remove('loading');
+            document.querySelectorAll('.hero .animate').forEach(el => el.classList.add('visible'));
+        });
+
+        // Lógica del menú hamburguesa móvil
+        const mobileMenuBtn = document.getElementById('mobile-menu');
+        const navMenu = document.getElementById('nav-menu');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const idiomaToggle = document.getElementById('idioma-toggle');
+        const navIdioma = document.querySelector('.nav-idioma');
+
+        if(mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                navMenu.classList.toggle('open');
+                const icon = mobileMenuBtn.querySelector('i');
+                
+                if(navMenu.classList.contains('open')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                    navIdioma.classList.remove('active'); // Cerrar dropdown de idiomas al cerrar el menú
+                }
+            });
+        }
+
+        // Cerrar el menú al hacer clic en un enlace (móvil)
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768 && navMenu.classList.contains('open')) {
+                    navMenu.classList.remove('open');
+                    if(mobileMenuBtn) {
+                        mobileMenuBtn.querySelector('i').classList.replace('fa-times', 'fa-bars');
+                    }
+                    navIdioma.classList.remove('active');
+                }
+            });
+        });
+
+        // Toggle del dropdown de idioma en móvil
+        if(idiomaToggle) {
+            idiomaToggle.addEventListener('click', (e) => {
+                if (window.innerWidth <= 768) {
+                    e.preventDefault();
+                    navIdioma.classList.toggle('active');
+                }
+            });
+        }
+
+        // Observador para animaciones al hacer scroll (Optimizado)
+        const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    // Dejar de observar una vez animado para ahorrar recursos
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.animate').forEach(el => observer.observe(el));
+
+        // Control de la línea indicadora de scroll
+        const scrollIndicator = document.querySelector('.hero-scroll');
+        if (scrollIndicator) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    scrollIndicator.classList.add('hidden');
+                } else {
+                    scrollIndicator.classList.remove('hidden');
+                }
+            }, { passive: true }); // Mejora el rendimiento del scroll
+        }
+
+        // --- LÓGICA DE LA GALERÍA MEJORADA ---
+        const projectImages = {
+            'palamos': ['https://maveinteriorstudio.com/wp-content/uploads/2025/01/2DA3B752-61ED-4702-A2EC-8019577BABD1-min-scaled.jpeg', 'https://maveinteriorstudio.com/wp-content/uploads/2025/01/604B9BE1-C006-4884-A5E9-4206E9F94451-min-scaled.jpeg', 'https://maveinteriorstudio.com/wp-content/uploads/2025/01/40856A6C-A578-472B-BC4B-9B81D2C4E082-min-scaled.jpeg'],
+            'sils': ['https://maveinteriorstudio.com/wp-content/uploads/2025/01/01-min-scaled.jpeg', 'https://maveinteriorstudio.com/wp-content/uploads/2025/01/02-min-scaled.jpeg', 'https://maveinteriorstudio.com/wp-content/uploads/2025/01/03-min-scaled.jpeg', 'https://maveinteriorstudio.com/wp-content/uploads/2025/01/04-min-scaled.jpeg', 'https://maveinteriorstudio.com/wp-content/uploads/2025/01/05-min-scaled.jpeg'],
+            'mataro': ['https://maveinteriorstudio.com/wp-content/uploads/2025/01/01-Mataro-min-scaled.jpeg', 'https://maveinteriorstudio.com/wp-content/uploads/2025/01/02-Mataro-min-scaled.jpeg', 'https://maveinteriorstudio.com/wp-content/uploads/2025/01/03-Mataro-min-scaled.jpeg', 'https://maveinteriorstudio.com/wp-content/uploads/2025/01/04-Mataro-min-scaled.jpeg', 'https://maveinteriorstudio.com/wp-content/uploads/2025/01/05-Mataro-min-scaled.jpeg'],
+            'sabadell': ['https://maveinteriorstudio.com/wp-content/uploads/2025/01/01-Sab-min-scaled.jpeg', 'https://maveinteriorstudio.com/wp-content/uploads/2025/01/02-Sab-min-scaled.jpeg', 'https://maveinteriorstudio.com/wp-content/uploads/2025/01/03-Sab-min-scaled.jpeg', 'https://maveinteriorstudio.com/wp-content/uploads/2025/01/04-Sab-min-scaled.jpeg'],
+            'premia1': ['https://maveinteriorstudio.com/wp-content/uploads/2025/01/01-Premia-min-scaled.jpeg', 'https://maveinteriorstudio.com/wp-content/uploads/2025/01/02-Premia-min-scaled.jpeg', 'https://maveinteriorstudio.com/wp-content/uploads/2025/01/03-Premia-min.png', 'https://maveinteriorstudio.com/wp-content/uploads/2025/01/04-Premia-min-scaled.jpeg'],
+            'arenys': ['https://maveinteriorstudio.com/wp-content/uploads/2025/01/001-Arenys-min.png', 'https://maveinteriorstudio.com/wp-content/uploads/2025/01/002-Arenys-min-scaled.jpeg', 'https://maveinteriorstudio.com/wp-content/uploads/2025/01/003-Arenys-min.png', 'https://maveinteriorstudio.com/wp-content/uploads/2025/01/004-Arenys-min.png', 'https://maveinteriorstudio.com/wp-content/uploads/2025/01/005-Arenys-min.png'],
+            'premia2': ['https://maveinteriorstudio.com/wp-content/uploads/2025/01/01-Premia2-min-scaled.jpeg', 'https://maveinteriorstudio.com/wp-content/uploads/2025/01/02-Premia2-min-scaled.jpeg', 'https://maveinteriorstudio.com/wp-content/uploads/2025/01/03-Premia2-min-scaled.jpeg', 'https://maveinteriorstudio.com/wp-content/uploads/2025/01/04-Premia2-min-scaled.jpeg', 'https://maveinteriorstudio.com/wp-content/uploads/2025/01/05-Premia2-min-scaled.jpeg'],
+            'lamolina': ['https://maveinteriorstudio.com/wp-content/uploads/2025/01/Mave_Interior_Studio_CuinaMolina-min-scaled.jpg', 'https://maveinteriorstudio.com/wp-content/uploads/2024/05/WhatsApp-Image-2024-05-30-at-19.47.46-scaled.jpeg']
+        };
+
+        let currentArray = [];
+        let currentIndex = 0;
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+
+        // Asignar eventos dinámicamente usando data-attributes
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const projectId = card.getAttribute('data-project');
+                openGallery(projectId);
+            });
+        });
+
+        function openGallery(projectId) {
+            if(!projectImages[projectId]) return;
+            currentArray = projectImages[projectId];
+            currentIndex = 0;
+            updateLightboxImage();
+            lightbox.classList.add('show');
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeGallery() {
+            lightbox.classList.remove('show');
+            document.body.style.overflow = "auto";
+        }
+
+        function changeImage(step) {
+            currentIndex += step;
+            if (currentIndex >= currentArray.length) currentIndex = 0;
+            if (currentIndex < 0) currentIndex = currentArray.length - 1;
+            updateLightboxImage();
+        }
+
+        function updateLightboxImage() {
+            lightboxImg.src = currentArray[currentIndex];
+        }
+
+        // Eventos de botones
+        document.getElementById('btn-close-gallery').addEventListener('click', closeGallery);
+        document.getElementById('btn-prev-img').addEventListener('click', (e) => { e.stopPropagation(); changeImage(-1); });
+        document.getElementById('btn-next-img').addEventListener('click', (e) => { e.stopPropagation(); changeImage(1); });
+
+        // Cerrar al hacer click fuera de la imagen
+        lightbox.addEventListener('click', function(e) {
+            if(e.target === this) closeGallery();
+        });
+
+        // Eventos de teclado para mejorar UX
+        document.addEventListener('keydown', (e) => {
+            if (lightbox.classList.contains('show')) {
+                if (e.key === 'Escape') closeGallery();
+                if (e.key === 'ArrowRight') changeImage(1);
+                if (e.key === 'ArrowLeft') changeImage(-1);
+            }
+        });
+    </script>
+</body>
+</html>

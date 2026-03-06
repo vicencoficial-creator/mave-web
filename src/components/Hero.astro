@@ -1,0 +1,75 @@
+---
+import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+---
+<section class="hero" id="home">
+    <img src="/images/logo.png" alt="Logo Mave Interior Studio" class="animate fade-in-up">
+    <h1 class="animate fade-in-up">MAVE</h1>
+    <h2 class="animate fade-in-up">{t('hero.title')}</h2>
+    <a href={translatePath('/#contacto')} class="btn-outline animate fade-in-up">{t('hero.btn')}</a>
+    
+    <div class="hero-scroll"><div class="scroll-line"></div></div>
+</section>
+
+<style>
+    /* ---------------------------------------------------- */
+    /* --- PORTADA --- */
+    /* ---------------------------------------------------- */
+    .hero { 
+        position: relative; height: calc(100vh + 115px); 
+        display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; 
+        background: radial-gradient(circle at center, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.1) 60%), 
+                    url('/images/portada_web.png') center/cover no-repeat; 
+        background-position: center center;
+    }
+    
+    .hero img { width: 165px; margin-bottom: 20px; position: relative; z-index: 2; filter: drop-shadow(0px 4px 20px rgba(0,0,0,0.6)); }
+    
+    .hero h1 { 
+        position: relative; z-index: 2; font-family: var(--font-headings); font-size: 72px; color: var(--text-white); margin: 0; 
+        text-transform: uppercase; letter-spacing: 0.45em; margin-right: -0.45em; font-weight: 700; 
+        text-shadow: 0px 4px 25px rgba(0,0,0,0.7); 
+    }
+    
+    .hero h2 { 
+        position: relative; z-index: 2; font-family: var(--font-headings); font-size: 24px; color: var(--text-white); 
+        margin: 8px 0 35px 0; text-transform: uppercase; letter-spacing: 0.4em; margin-right: -0.4em; 
+        font-weight: 300; font-style: italic; text-shadow: 0px 4px 20px rgba(0,0,0,0.7); 
+    }
+    
+    .btn-outline { 
+        position: relative; z-index: 2; font-family: var(--font-main); text-decoration: none; color: var(--text-white); 
+        border: 1px solid var(--text-white); padding: 14px 35px; font-size: 16px; text-transform: uppercase; font-weight: 400; 
+        letter-spacing: 0.1em; transition: all var(--transition-speed) ease; box-shadow: 0px 4px 15px rgba(0,0,0,0.3); 
+    }
+    .btn-outline:hover { background-color: var(--text-white); color: var(--text-dark); }
+
+    .hero-scroll { position: absolute; bottom: 140px; left: 50%; transform: translateX(-50%); z-index: 2; height: 60px; width: 1px; background: rgba(255, 255, 255, 0.2); overflow: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; }
+    .hero-scroll.hidden { opacity: 0; visibility: hidden; }
+    .scroll-line { width: 100%; height: 100%; background: var(--text-white); animation: scrollFluid 2s cubic-bezier(0.6, 0.05, 0.4, 1) infinite; }
+
+    @media (max-width: 768px) {
+        .hero img { width: 115px; margin-bottom: 10px; }
+        .hero h1 { font-size: 48px; letter-spacing: 0.3em; margin-right: -0.3em; }
+        .hero h2 { font-size: 16px; letter-spacing: 0.25em; margin-right: -0.25em; margin-bottom: 25px; }
+    }
+</style>
+
+<script is:inline>
+    // Control de la línea indicadora de scroll
+    document.addEventListener('DOMContentLoaded', () => {
+        const scrollIndicator = document.querySelector('.hero-scroll');
+        if (scrollIndicator) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    scrollIndicator.classList.add('hidden');
+                } else {
+                    scrollIndicator.classList.remove('hidden');
+                }
+            }, { passive: true }); // Mejora el rendimiento del scroll
+        }
+    });
+</script>

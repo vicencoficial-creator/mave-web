@@ -1,0 +1,82 @@
+/* --- VARIABLES CSS (Para fácil mantenimiento) --- */
+:root {
+    --bg-color: #f8f8f8;
+    --text-dark: #181818;
+    --text-light: #666666;
+    --text-white: #ffffff;
+    --primary-color: #ad9271;
+    --secondary-color: #996535;
+    --box-bg: #eaeaeb;
+    --font-main: 'Heebo', sans-serif;
+    --font-headings: 'Lato', sans-serif;
+    --transition-speed: 0.3s;
+}
+
+/* SCROLL SUAVE Y FRENADO DE MENÚ */
+html { 
+    scroll-behavior: smooth; 
+    background-color: var(--bg-color); 
+    overflow-x: hidden;
+}
+#sobrenosotros, #servicios, #proyectos, #contacto { scroll-margin-top: 100px; }
+
+body { 
+    margin: 0; 
+    font-family: var(--font-main); 
+    background-color: var(--bg-color); 
+    overflow-x: hidden; 
+}
+body.loading { overflow: hidden; }
+
+/* --- PRELOADER (Carga de la web) --- */
+#preloader {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
+    background-color: var(--bg-color); z-index: 99999;
+    transition: opacity 0.8s ease; 
+}
+#preloader.hidden { opacity: 0; visibility: hidden; }
+
+/* ANIMACIONES AL HACER SCROLL */
+.animate { 
+    opacity: 0; 
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out; 
+    will-change: opacity, transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+.fade-in-up { transform: translateY(40px); }
+.fade-in-left { transform: translateX(-50px); }
+.fade-in-right { transform: translateX(50px); }
+.animate.visible { 
+    opacity: 1; 
+    transform: translate(0); 
+} 
+
+/* ANIMACIÓN DEL MENÚ */
+@keyframes slideDown {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* ANIMACIÓN FLUIDA DE SCROLL */
+@keyframes scrollFluid {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+}
+
+/* BOTONES GLOBALES */
+.btn-outline { 
+    position: relative; z-index: 2; font-family: var(--font-main); text-decoration: none; color: var(--text-white); 
+    border: 1px solid var(--text-white); padding: 14px 35px; font-size: 16px; text-transform: uppercase; font-weight: 400; 
+    letter-spacing: 0.1em; transition: all var(--transition-speed) ease; box-shadow: 0px 4px 15px rgba(0,0,0,0.3); 
+    display: inline-block;
+}
+.btn-outline:hover { background-color: var(--text-white); color: var(--text-dark); }
+
+/* --- RESPONSIVE GENERAL --- */
+@media (min-width: 769px) {
+    .hero, .quote-parallax {
+        background-attachment: fixed;
+        -webkit-transform: translate3d(0,0,0);
+    }
+}

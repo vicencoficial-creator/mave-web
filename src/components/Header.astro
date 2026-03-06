@@ -1,0 +1,160 @@
+---
+import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+---
+<header id="main-header">
+    <div class="mobile-top-bar" id="mobile-menu" aria-label="Abrir menú" role="button" tabindex="0">
+        <i class="fas fa-bars"></i>
+    </div>
+    
+    <nav id="nav-menu">
+        <a href={translatePath('/#home')} class="nav-link">{t('nav.home')}</a>
+        <a href={translatePath('/#sobrenosotros')} class="nav-link">{t('nav.about')}</a>
+        <a href={translatePath('/#servicios')} class="nav-link">{t('nav.services')}</a>
+        <a href={translatePath('/#proyectos')} class="nav-link">{t('nav.projects')}</a>
+        <a href={translatePath('/#contacto')} class="nav-link">{t('nav.contact')}</a>
+        
+        <div class="nav-idioma">
+            <a href="#" id="idioma-toggle">{t('footer.lang')} <i class="fas fa-angle-down"></i></a>
+            <div class="nav-dropdown">
+                <a href="/">{t('nav.lang.ca')}</a>
+                <a href="/es/">{t('nav.lang.es')}</a>
+                <a href="/en/">{t('nav.lang.en')}</a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<style>
+    /* ---------------------------------------------------- */
+    /* --- CABECERA Y MENÚ --- */
+    /* ---------------------------------------------------- */
+    header { 
+        position: absolute; top: 0; left: 0; width: 100%; display: flex; justify-content: center; 
+        padding: 30px 0; z-index: 100; animation: slideDown 1s ease-out forwards; 
+    }
+    .mobile-top-bar { display: none; }
+    nav { display: flex; gap: 30px; align-items: center; }
+    
+    nav a.nav-link { 
+        position: relative;
+        text-decoration: none; color: var(--text-white); font-family: var(--font-headings); 
+        font-size: 13.5px; font-weight: 400; text-transform: uppercase; letter-spacing: 0.2em; 
+        transition: color var(--transition-speed) ease; text-shadow: 1px 1px 4px rgba(0,0,0,0.6); 
+        padding-bottom: 6px; 
+    }
+    nav a.nav-link:hover { color: var(--text-white); }
+    
+    nav a.nav-link::after {
+        content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+        background-color: var(--primary-color); transform: scaleX(0); transition: transform var(--transition-speed) ease;
+    }
+    nav a.nav-link:hover::after { transform: scaleX(1); }
+
+    /* DESPLEGABLE D'IDIOMES CORREGIDO */
+    .nav-idioma { position: relative; display: flex; align-items: center; }
+    .nav-idioma > a { 
+        text-decoration: none; color: var(--text-white); font-family: var(--font-headings); 
+        font-size: 13.5px; font-weight: 400; text-transform: uppercase; letter-spacing: 0.2em;
+        text-shadow: 1px 1px 4px rgba(0,0,0,0.6); 
+        padding-bottom: 6px;
+    }
+    .nav-idioma i { margin-left: 4px; font-size: 10px; transform: translateY(-1px); }
+    .nav-dropdown {
+        display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); 
+        background-color: var(--text-white); min-width: 120px; box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        padding: 10px 0; margin-top: 10px; border-radius: 2px;
+    }
+    
+    .nav-dropdown::before {
+        content: ''; position: absolute; top: -15px; left: 0; right: 0; height: 15px;
+    }
+
+    .nav-idioma:hover .nav-dropdown { display: block; }
+    .nav-dropdown a { display: block; padding: 10px 20px; color: var(--text-light); text-decoration: none; font-size: 11px; font-family: var(--font-headings); text-transform: uppercase; letter-spacing: 0.1em; text-align: center; }
+    .nav-dropdown a::after { display: none; }
+    .nav-dropdown a:hover { background-color: var(--bg-color); color: var(--primary-color); }
+
+    @media (max-width: 768px) {
+        header { position: fixed; padding: 0; background: transparent; z-index: 1000; }
+        
+        .mobile-top-bar {
+            display: block; width: 100%; 
+            background-color: rgba(255, 255, 255, 0.58);
+            text-align: center; padding: 18px 0; color: var(--text-white); font-size: 24px;
+            cursor: pointer; z-index: 1001; position: relative;
+        }
+        
+        nav {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background-color: rgba(24, 24, 24, 0.98);
+            flex-direction: column; justify-content: center; align-items: center; gap: 30px;
+            opacity: 0; visibility: hidden; transform: translateY(-20px);
+            transition: all 0.4s ease; z-index: 1000;
+        }
+        nav.open {
+            opacity: 1; visibility: visible; transform: translateY(0);
+        }
+        
+        nav a.nav-link, .nav-idioma > a { font-size: 18px; }
+        
+        .nav-idioma { margin-top: 10px; flex-direction: column; }
+        .nav-dropdown { 
+            position: relative; top: 0; left: 0; transform: none; 
+            background: transparent; box-shadow: none; display: none; margin-top: 15px; 
+        }
+        .nav-idioma.active .nav-dropdown { display: block; }
+        .nav-dropdown a { color: #cccccc; padding: 10px; font-size: 16px; }
+    }
+</style>
+
+<script is:inline>
+    // Lógica del menú hamburguesa móvil
+    const mobileMenuBtn = document.getElementById('mobile-menu');
+    const navMenu = document.getElementById('nav-menu');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const idiomaToggle = document.getElementById('idioma-toggle');
+    const navIdioma = document.querySelector('.nav-idioma');
+
+    if(mobileMenuBtn) {
+        mobileMenuBtn.addEventListener('click', () => {
+            navMenu.classList.toggle('open');
+            const icon = mobileMenuBtn.querySelector('i');
+            
+            if(navMenu.classList.contains('open')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+                navIdioma.classList.remove('active'); // Cerrar dropdown de idiomas al cerrar el menú
+            }
+        });
+    }
+
+    // Cerrar el menú al hacer clic en un enlace (móvil)
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth <= 768 && navMenu.classList.contains('open')) {
+                navMenu.classList.remove('open');
+                if(mobileMenuBtn) {
+                    mobileMenuBtn.querySelector('i').classList.replace('fa-times', 'fa-bars');
+                }
+                navIdioma.classList.remove('active');
+            }
+        });
+    });
+
+    // Toggle del dropdown de idioma en móvil
+    if(idiomaToggle) {
+        idiomaToggle.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+                e.preventDefault();
+                navIdioma.classList.toggle('active');
+            }
+        });
+    }
+</script>

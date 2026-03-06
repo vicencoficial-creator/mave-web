@@ -1,0 +1,65 @@
+---
+import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+---
+<footer>
+    <div class="footer-container">
+        <div class="footer-top">
+            <div class="footer-logo-col">
+                <img src="/images/logo_footer.png" alt="Mave Interior Studio Logo" loading="lazy">
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/profile.php?id=61567412936513" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/maveinteriorstudio/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h6>{t('footer.links')}</h6>
+                <ul>
+                    <li><a href={translatePath('/#home')}>{t('nav.home')}</a></li>
+                    <li><a href={translatePath('/#sobrenosotros')}>{t('nav.about')}</a></li>
+                    <li><a href={translatePath('/#servicios')}>{t('nav.services')}</a></li>
+                    <li><a href={translatePath('/#proyectos')}>{t('nav.projects')}</a></li>
+                    <li><a href={translatePath('/#contacto')}>{t('nav.contact')}</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h6>{t('footer.lang')}</h6>
+                <ul>
+                    <li><a href="/es/">{t('nav.lang.es')}</a></li>
+                    <li><a href="/en/">{t('nav.lang.en')}</a></li>
+                    <li><a href="/">{t('nav.lang.ca')}</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div>{t('footer.rights')}</div>
+            <div>{t('footer.copy')}</div>
+        </div>
+    </div>
+</footer>
+
+<style>
+    /* FOOTER */
+    footer { background-color: var(--text-white); padding: 80px 20px 20px 20px; }
+    .footer-container { max-width: 1300px; margin: 0 auto; }
+    .footer-top { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; margin-bottom: 60px; }
+    .footer-logo-col img { width: 90px; margin-bottom: 25px; }
+    .social-icons { display: flex; gap: 15px; }
+    .social-icons a { display: flex; align-items: center; justify-content: center; width: 35px; height: 35px; background-color: var(--text-dark); color: var(--text-white); border-radius: 50%; text-decoration: none; transition: background var(--transition-speed) ease; }
+    .social-icons a:hover { background-color: var(--primary-color); }
+    .footer-links h6 { font-family: var(--font-headings); font-size: 18px; color: var(--text-dark); margin: 0 0 25px 0; font-weight: 600; text-transform: none; }
+    .footer-links ul { list-style: none; padding: 0; margin: 0; }
+    .footer-links li { margin-bottom: 12px; }
+    .footer-links a { font-family: var(--font-main); text-decoration: none; color: var(--text-light); font-size: 15px; font-weight: 300; transition: color var(--transition-speed) ease; }
+    .footer-links a:hover { color: var(--primary-color); }
+    .footer-bottom { border-top: 1px solid var(--box-bg); padding-top: 25px; display: flex; justify-content: space-between; align-items: center; font-family: var(--font-main); font-size: 13px; color: #888888; font-weight: 300; }
+
+    @media (max-width: 768px) {
+        .footer-top { grid-template-columns: 1fr; text-align: center; }
+        .footer-logo-col { display: flex; flex-direction: column; align-items: center; }
+        .footer-bottom { flex-direction: column; gap: 15px; text-align: center; }
+    }
+</style>

@@ -1,0 +1,104 @@
+---
+import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+---
+<section class="services-cta-wrapper" id="servicios">
+    <div class="services-bg"></div>
+    <div class="cta-bg"></div>
+
+    <div class="services-cta-content">
+        <div class="services-header animate fade-in-up">
+            <h2 class="small">{t('serv.sub')}</h2>
+            <h2 class="large">{t('serv.title')}</h2>
+        </div>
+        <div class="services-grid">
+            <div class="service-card animate fade-in-up">
+                <img src="/images/disseny.jpg" alt="Disseny" class="service-img" loading="lazy">
+                <div class="service-content">
+                    <h3>{t('serv.design.title')}</h3>
+                    <p>{t('serv.design.desc')}</p>
+                </div>
+            </div>
+            <div class="service-card animate fade-in-up" style="transition-delay: 0.2s;">
+                <img src="/images/reforma_integral.jpg" alt="Reforma Integral" class="service-img" loading="lazy">
+                <div class="service-content">
+                    <h3>{t('serv.integral.title')}</h3>
+                    <p>{t('serv.integral.desc')}</p>
+                </div>
+            </div>
+            <div class="service-card animate fade-in-up" style="transition-delay: 0.4s;">
+                <img src="/images/reforma_cuina.jpg" alt="Reforma de Cuina" class="service-img" loading="lazy">
+                <div class="service-content">
+                    <h3>{t('serv.kitchen.title')}</h3>
+                    <p>{t('serv.kitchen.desc')}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cta-container">
+        <div class="cta-text animate fade-in-left">
+            <h2>{t('serv.cta.title')}</h2>
+            <p>{t('serv.cta.desc')}</p>
+        </div>
+        <div class="animate fade-in-right">
+            <a href={translatePath('/#contacto')} class="btn-outline">{t('serv.cta.btn')}</a>
+        </div>
+    </div>
+</section>
+
+<section class="quote-parallax">
+    <h3 class="animate fade-in-up">{t('serv.quote.1')}<br>{t('serv.quote.2')}</h3>
+</section>
+
+<style>
+    /* ---------------------------------------------------- */
+    /* --- SERVICIOS Y FRASE NEGRA --- */
+    /* ---------------------------------------------------- */
+    .services-cta-wrapper { position: relative; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+    
+    .services-bg { flex: 55; background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/images/habitacion_disenada.jpg') center 59% / cover; }
+    
+    .cta-bg { flex: 45; background-color: #1a1a1a; }
+
+    .services-cta-content { position: absolute; top: 42%; left: 50%; transform: translate(-50%, -50%); width: 100%; max-width: 1300px; padding: 0 20px; box-sizing: border-box; z-index: 10; }
+    .services-header { text-align: center; margin-bottom: 40px; width: 100%; }
+    
+    .services-header h2.small { font-family: var(--font-headings); color: var(--primary-color); font-size: 32px; margin: 0; font-weight: 600; letter-spacing: 0.01em; transform: translateX(-40px); }
+    .services-header h2.large { font-family: var(--font-headings); color: var(--primary-color); font-size: 42px; margin: 0; font-weight: 600; letter-spacing: 0.01em; transform: translateX(40px); }
+    
+    .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+    .service-card { background: var(--text-white); box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+    .service-img { width: 100%; height: 260px; object-fit: cover; display: block; background-color: var(--box-bg); }
+    .service-content { padding: 40px 20px; text-align: center; }
+    .service-content h3 { font-family: var(--font-headings); font-size: 18px; color: var(--text-dark); margin: 0 0 15px 0; font-weight: 600; text-transform: uppercase; }
+    .service-content p { color: var(--text-light); font-size: 15px; line-height: 1.6; margin: 0; font-weight: 300; }
+    
+    .cta-container { position: absolute; bottom: 8%; left: 50%; transform: translateX(-50%); width: 100%; max-width: 1300px; display: flex; justify-content: space-between; align-items: center; z-index: 10; padding: 0 20px; box-sizing: border-box; }
+    .cta-text h2 { font-family: var(--font-headings); font-size: 32px; color: var(--text-white); margin: 0 0 10px 0; font-weight: 600; }
+    .cta-text p { color: #aaaaaa; font-size: 16px; margin: 0; font-weight: 300; }
+    
+    .quote-parallax { 
+        height: 50vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 40px; 
+        background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/images/mesa_decorada.jpg') center / cover; 
+        background-attachment: fixed; 
+        background-position: center center;
+        -webkit-transform: translate3d(0,0,0); /* iOS Hardware acceleration fix */
+    }
+    .quote-parallax h3 { font-family: var(--font-headings); color: var(--text-white); font-size: 38px; font-weight: 600; line-height: 1.4; max-width: 1000px; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); margin: 0; }
+
+    @media (max-width: 768px) {
+        .services-grid { grid-template-columns: 1fr; }
+        .services-header h2.small, .services-header h2.large { transform: translateX(0); }
+        .quote-parallax { height: auto; padding: 100px 20px; }
+        .quote-parallax h3 { font-size: 28px; }
+        .services-cta-wrapper { height: auto; display: block; background-color: #1a1a1a; padding-bottom: 50px; }
+        .services-bg { height: 350px; }
+        .cta-bg { display: none; }
+        .services-cta-content { position: relative; top: 0; left: 0; transform: none; margin-top: -280px; margin-bottom: 50px;}
+        .cta-container { position: relative; bottom: 0; left: 0; transform: none; flex-direction: column; text-align: center; gap: 30px; }
+    }
+</style>

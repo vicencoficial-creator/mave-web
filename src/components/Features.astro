@@ -1,0 +1,41 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+<section class="features">
+    <div class="features-grid">
+        <div class="card animate fade-in-up">
+            <div class="icon-circle"><i class="far fa-clock"></i></div>
+            <h3>{t('feat.t1')}</h3>
+            <p>{t('feat.p1')}</p>
+        </div>
+        <div class="card animate fade-in-up" style="transition-delay: 0.2s;">
+            <div class="icon-circle"><i class="far fa-lightbulb"></i></div>
+            <h3>{t('feat.t2')}</h3>
+            <p>{t('feat.p2')}</p>
+        </div>
+        <div class="card animate fade-in-up" style="transition-delay: 0.4s;">
+            <div class="icon-circle"><i class="fas fa-hammer"></i></div>
+            <h3>{t('feat.t3')}</h3>
+            <p>{t('feat.p3')}</p>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* ---------------------------------------------------- */
+    /* BOCADILLOS Y SOBRE NOSOTROS */
+    /* ---------------------------------------------------- */
+    .features { max-width: 1300px; margin: 0 auto; position: relative; z-index: 20; margin-top: -80px; padding: 0 20px; }
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+    .card { background-color: var(--text-white); padding: 50px 30px 40px 30px; text-align: center; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+    .icon-circle { position: absolute; top: -35px; left: 50%; transform: translateX(-50%); background-color: var(--secondary-color); color: var(--text-white); width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; }
+    .card h3 { font-family: var(--font-headings); color: var(--text-dark); font-size: 24px; font-weight: 600; margin-bottom: 15px; }
+    .card p { font-family: var(--font-main); color: var(--text-light); font-size: 16px; line-height: 1.6; margin: 0; font-weight: 300; }
+
+    @media (max-width: 768px) {
+        .features-grid { grid-template-columns: 1fr; }
+    }
+</style>
