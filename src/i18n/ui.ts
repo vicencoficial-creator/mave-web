@@ -8,6 +8,10 @@ export const defaultLang = 'ca';
 
 export const ui = {
   ca: {
+    // SEO
+    'seo.title': 'Mave Interior Studio | Reformes i Disseny',
+    'seo.desc': 'Especialistes en reformes de cuina i reformes integrals a Barcelona, Maresme i Costa Brava. Projectes clau en mà.',
+
     // Header
     'nav.home': 'Inici',
     'nav.about': 'Sobre Nosaltres',
@@ -80,6 +84,10 @@ export const ui = {
     'footer.copy': 'Copyright © 2024. All rights reserved.',
   },
   es: {
+    // SEO
+    'seo.title': 'Mave Interior Studio | Reformas y Diseño',
+    'seo.desc': 'Especialistas en reformas de cocina y reformas integrales en Barcelona, Maresme y Costa Brava. Proyectos llave en mano.',
+
     // Header
     'nav.home': 'Inicio',
     'nav.about': 'Sobre Nosotros',
@@ -152,6 +160,10 @@ export const ui = {
     'footer.copy': 'Copyright © 2024. All rights reserved.',
   },
   en: {
+    // SEO
+    'seo.title': 'Mave Interior Studio | Renovations & Design',
+    'seo.desc': 'Specialists in kitchen and comprehensive renovations in Barcelona, Maresme, and Costa Brava. Turnkey projects.',
+
     // Header
     'nav.home': 'Home',
     'nav.about': 'About Us',

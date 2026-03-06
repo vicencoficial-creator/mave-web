@@ -1,15 +1,20 @@
 ---
 import '../styles/global.css';
-import { getLangFromUrl } from '../i18n/utils';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
 <!DOCTYPE html>
 <html lang={lang}>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mave Interior Studio</title>
+    <title>{t('seo.title')}</title>
+    <meta name="description" content={t('seo.desc')}>
+
+    <!-- Temporarily block search engine indexing during development/testing -->
+    <meta name="robots" content="noindex, nofollow">
     
     <!-- Preconnect para optimizar la carga de fuentes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
