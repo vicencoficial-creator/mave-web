@@ -64,16 +64,20 @@ const translatePath = useTranslatedPath(lang);
     }
     .nav-idioma i { margin-left: 4px; font-size: 10px; transform: translateY(-1px); }
     .nav-dropdown {
-        display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); 
+        position: absolute; top: 100%; left: 50%; transform: translateX(-50%) translateY(15px); 
         background-color: var(--text-white); min-width: 120px; box-shadow: 0 8px 30px rgba(0,0,0,0.1);
         padding: 10px 0; margin-top: 10px; border-radius: 2px;
+        opacity: 0; visibility: hidden;
+        transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
     }
     
     .nav-dropdown::before {
         content: ''; position: absolute; top: -15px; left: 0; right: 0; height: 15px;
     }
 
-    .nav-idioma:hover .nav-dropdown { display: block; }
+    .nav-idioma:hover .nav-dropdown { 
+        opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); 
+    }
     .nav-dropdown a { display: block; padding: 10px 20px; color: var(--text-light); text-decoration: none; font-size: 11px; font-family: var(--font-headings); text-transform: uppercase; letter-spacing: 0.1em; text-align: center; }
     .nav-dropdown a::after { display: none; }
     .nav-dropdown a:hover { background-color: var(--bg-color); color: var(--primary-color); }
@@ -103,10 +107,14 @@ const translatePath = useTranslatedPath(lang);
         
         .nav-idioma { margin-top: 10px; flex-direction: column; }
         .nav-dropdown { 
-            position: relative; top: 0; left: 0; transform: none; 
-            background: transparent; box-shadow: none; display: none; margin-top: 15px; 
+            position: relative; top: 0; left: 0; transform: translateY(-10px); 
+            background: transparent; box-shadow: none; margin-top: 15px; 
+            opacity: 0; visibility: hidden; height: 0; overflow: hidden; padding: 0;
+            transition: all 0.3s ease;
         }
-        .nav-idioma.active .nav-dropdown { display: block; }
+        .nav-idioma.active .nav-dropdown { 
+            opacity: 1; visibility: visible; transform: translateY(0); height: auto; padding: 10px 0;
+        }
         .nav-dropdown a { color: #cccccc; padding: 10px; font-size: 16px; }
     }
 </style>
