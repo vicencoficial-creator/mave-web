@@ -20,9 +20,9 @@ const translatePath = useTranslatedPath(lang);
         <div class="nav-idioma">
             <a href="#" id="idioma-toggle">{t('footer.lang')} <i class="fas fa-angle-down"></i></a>
             <div class="nav-dropdown">
-                <a href="/">{t('nav.lang.ca')}</a>
-                <a href="/es/">{t('nav.lang.es')}</a>
-                <a href="/en/">{t('nav.lang.en')}</a>
+                {lang !== 'ca' && <a href="/">{t('nav.lang.ca')}</a>}
+                {lang !== 'es' && <a href="/es/">{t('nav.lang.es')}</a>}
+                {lang !== 'en' && <a href="/en/">{t('nav.lang.en')}</a>}
             </div>
         </div>
     </nav>

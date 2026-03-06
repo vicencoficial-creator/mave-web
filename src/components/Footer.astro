@@ -28,9 +28,9 @@ const translatePath = useTranslatedPath(lang);
             <div class="footer-links">
                 <h6>{t('footer.lang')}</h6>
                 <ul>
-                    <li><a href="/es/">{t('nav.lang.es')}</a></li>
-                    <li><a href="/en/">{t('nav.lang.en')}</a></li>
-                    <li><a href="/">{t('nav.lang.ca')}</a></li>
+                    {lang !== 'es' && <li><a href="/es/">{t('nav.lang.es')}</a></li>}
+                    {lang !== 'en' && <li><a href="/en/">{t('nav.lang.en')}</a></li>}
+                    {lang !== 'ca' && <li><a href="/">{t('nav.lang.ca')}</a></li>}
                 </ul>
             </div>
         </div>
