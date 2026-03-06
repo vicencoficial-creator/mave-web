@@ -31,8 +31,13 @@ const lang = getLangFromUrl(Astro.url);
                 preloader.classList.add('hidden');
                 setTimeout(() => { preloader.style.display = 'none'; }, 800);
             }
-            document.body.classList.remove('loading');
-            document.querySelectorAll('.hero .animate').forEach(el => el.classList.add('visible'));
+            
+            // Allow a tiny delay before starting layout animations
+            setTimeout(() => {
+                document.body.classList.remove('loading');
+                // Initiate Hero animations
+                document.querySelectorAll('.hero .animate').forEach(el => el.classList.add('visible'));
+            }, 100);
         });
 
         // Observador para animaciones al hacer scroll (Optimizado)

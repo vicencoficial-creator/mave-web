@@ -26,7 +26,16 @@ body {
     background-color: var(--bg-color); 
     overflow-x: hidden; 
 }
-body.loading { overflow: hidden; }
+
+/* --- PRELOADER Y FOUC (Carga inicial) --- */
+body.loading {
+    overflow: hidden;
+}
+body.loading .animate {
+    opacity: 0 !important;
+    transform: translateY(40px) !important;
+    transition: none !important;
+}
 
 /* --- PRELOADER (Carga de la web) --- */
 #preloader {
